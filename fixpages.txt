@@ -1,5 +1,0 @@
-apparently pages fails to publish sometimes.
-just gets stuck in queued.
-
-supposedly, making a new commit can (kinda) fix that.
-we'll see.

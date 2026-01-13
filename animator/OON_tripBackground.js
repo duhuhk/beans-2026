@@ -38,15 +38,20 @@ function OON_tripBackground(status, bandwidth, magnitude0, magnitude1, frequency
 		tick,
 		dtick,
 		dt,
-		// fps,
+		fps,
 	} = clock;
+	
+	// rotation stuff
+	// (animation designed for landscape,
+	//  and doesn't always look right in portrait)
+	const rotate = H > W;	// should the canvas be rotated
 	
 	// fix resolution scaling
 	// (so that the same amount of scaled pixels shown at any resolution)
-	// let bgResScale = Math.max(window.innerWidth / 1920, window.innerHeight / 1080);
-	// bgResScale = Math.ceil(bgResScale);
-	// scale /= bgResScale;
-	// console.log(scale);
+	let bgResScale = Math.max(window.innerWidth / 1920, window.innerHeight / 1080);
+	bgResScale = Math.ceil(bgResScale);
+	scale /= bgResScale;
+	// (this can also be handled inside ini.js)
 	
 	// handle lag stuff
 	// let fpsGoal = 60;					// minimum FPS to aim for
@@ -56,6 +61,11 @@ function OON_tripBackground(status, bandwidth, magnitude0, magnitude1, frequency
 		// fpsScale = Math.ceil(1 / fpsRatio);
 		// scale /= fpsScale;
 	// }
+	/*
+	disabled but kept in because may cause flickering on edgecases where the
+	framerate goes up JUST high enough with this trick,
+	but could be nice to have a solution for that later
+	*/
 	
 	// create the background buffer
 	let buffer = new Uint8ClampedArray(4 * W * H);
@@ -114,6 +124,7 @@ function OON_tripBackground(status, bandwidth, magnitude0, magnitude1, frequency
 	//
 	// determine angle that rays point at
 	let a = Math.atan2(y1 - origin.y, x1 - origin.x);
+	if(rotate) a += Math.PI / 2;
 	a %= Math.PI * 2;
 	//
 	// miscellaneous pre-computes
@@ -164,11 +175,10 @@ function OON_tripBackground(status, bandwidth, magnitude0, magnitude1, frequency
 			for (let i = 0; i < 1 / scale; i++){
 				for(let j = 0; j < 1 / scale; j++){
 					// prevent wrapping around at edge (when scale not a power of 2)
-					if(xf / scale + i >= W) continue;	
+					if(xf / scale + i >= W) continue;
 					
 					// find red index, then color the pixel
 					let rIndex = 4 * (((xf + W * yf) / scale) + i + W * j);
-					// let rIndex = 4 * (Math.trunc((xf + W * yf) / scale) + i + W * j);
 					buffer[rIndex + 0] = rValue;
 					buffer[rIndex + 1] = gValue;
 					buffer[rIndex + 2] = bValue;

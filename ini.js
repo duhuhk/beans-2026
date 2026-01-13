@@ -45,8 +45,8 @@ function GENERATE_INI(){
 		offset: Math.random() * 2048,
 		
 		bandwidth: 3/5,
-		// scale: 1/32,
-		scale: 1/32 / bgResScale,
+		scale: 1/32,
+		// scale: 1/32 / bgResScale,	// this can also be handled inside OON_tripBackground
 	};
 	let ccfg = {	// caption (OON_waver)
 		A: 3/2,
