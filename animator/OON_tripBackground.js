@@ -37,8 +37,25 @@ function OON_tripBackground(status, bandwidth, magnitude0, magnitude1, frequency
 	let {
 		tick,
 		dtick,
-		dt
+		dt,
+		// fps,
 	} = clock;
+	
+	// fix resolution scaling
+	// (so that the same amount of scaled pixels shown at any resolution)
+	// let bgResScale = Math.max(window.innerWidth / 1920, window.innerHeight / 1080);
+	// bgResScale = Math.ceil(bgResScale);
+	// scale /= bgResScale;
+	// console.log(scale);
+	
+	// handle lag stuff
+	// let fpsGoal = 60;					// minimum FPS to aim for
+	// let fpsRatio = fps / fpsGoal;	// how close to goal fps
+	// let fpsScale = 1;					// scaling to match best fps
+	// if(fpsRatio < 1){
+		// fpsScale = Math.ceil(1 / fpsRatio);
+		// scale /= fpsScale;
+	// }
 	
 	// create the background buffer
 	let buffer = new Uint8ClampedArray(4 * W * H);
@@ -125,7 +142,6 @@ function OON_tripBackground(status, bandwidth, magnitude0, magnitude1, frequency
 	let tickChannelPhase = tick * (1 + rFn(mixSet1) * tickScale) * tickScale * scaledBandwidth;	// w/ variance
 	// let tickChannelPhase = tick * tickScale * scaledBandwidth;	// w/o variance
 	tickChannelPhase %= 2 * Math.PI;
-	console.log(tickChannelPhase);
 	
 	// find distance to central line for each pixel,
 	// then get relevant color values and write to background buffer
@@ -152,6 +168,7 @@ function OON_tripBackground(status, bandwidth, magnitude0, magnitude1, frequency
 					
 					// find red index, then color the pixel
 					let rIndex = 4 * (((xf + W * yf) / scale) + i + W * j);
+					// let rIndex = 4 * (Math.trunc((xf + W * yf) / scale) + i + W * j);
 					buffer[rIndex + 0] = rValue;
 					buffer[rIndex + 1] = gValue;
 					buffer[rIndex + 2] = bValue;

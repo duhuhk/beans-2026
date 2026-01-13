@@ -24,9 +24,15 @@ function GENERATE_INI(){
 	let demonFrequencies = new Array(fCount).fill(0).map(i => Math.random() * fNorm);
 	//
 	// directions for object spin (to prevent all going same direction)
-	let bgDirection = Math.sign(Math.random() - 0.5);
+	let bgDirection0 = Math.sign(Math.random() - 0.5);
+	let bgDirection1 = Math.sign(Math.random() - 0.5);
 	let captionDirection = Math.sign(Math.random() - 0.5);
 	let demonDirection = Math.sign(Math.random() - 0.5);
+	//
+	// scaling stuff for screen
+	// (so that larger screens scale down to correct number of pixels)
+	let bgResScale = Math.max(window.innerWidth / 1920, window.innerHeight / 1080);
+	bgResScale = Math.ceil(bgResScale);
 	//
 	// configurations for animators
 	let bgcfg = {	// background (OON_tripBackground)
@@ -34,12 +40,13 @@ function GENERATE_INI(){
 		A1: 1/30,
 		// f0: new Array(fCount).fill(0).map(i => (Math.random() - Math.random()) * fNorm * 3/2),
 		// f1: new Array(fCount).fill(0).map(i => (Math.random() - Math.random()) * fNorm * 3),
-		f0: new Array(fCount).fill(0).map(i => bgDirection * Math.random() * fNorm * 3/2),
-		f1: new Array(fCount).fill(0).map(i => bgDirection * Math.random() * fNorm * 3),
+		f0: new Array(fCount).fill(0).map(i => bgDirection0 * Math.random() * fNorm * 3/2),
+		f1: new Array(fCount).fill(0).map(i => bgDirection1 * Math.random() * fNorm * 3),
 		offset: Math.random() * 2048,
 		
 		bandwidth: 3/5,
-		scale: 1/32,
+		// scale: 1/32,
+		scale: 1/32 / bgResScale,
 	};
 	let ccfg = {	// caption (OON_waver)
 		A: 3/2,
